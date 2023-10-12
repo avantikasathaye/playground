@@ -78,8 +78,9 @@ const MaterialUICardsExample = () => {
 
       try{
         const getData = async () => {
-          const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
-          setImageSet(response.data.results)
+          //const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
+          const response = await axios.get("https://jsonplaceholder.typicode.com/photos")
+          setImageSet(response.data)
         }
 
         getData();
@@ -96,30 +97,22 @@ const MaterialUICardsExample = () => {
         /* Data fetched from an API using axios */
 
            setTimeout(() => {
-            axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100000&offset=${index}`) 
+            //axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100000&offset=${index}`) 
+            axios.get("https://jsonplaceholder.typicode.com/photos")
             .then((res) => {
               debugger;
-                setImageSet((prevItems) => [...prevItems, ...res.data.results])
-                console.log(imageSet)
+                setImageSet((prevItems) => [...prevItems, ...res.data])
                 res.data.results.length > 0 ? setHasMore(true) : setHasMore(false)
             })
             .catch((err) => console.log(err));
             setIndex((prevIndex) => prevIndex + 1);
         }, 500);
 
- 
-
- 
-
         /* Just random infinite data - to test Infinite Scrolling */
       /*  setTimeout(() => {
         setArrayData((arrayData) => [...arrayData, ...Array.from({length: 20})])
       }, 500); */
     };
-
- 
-
-    
 
   return (
 
@@ -149,14 +142,14 @@ const MaterialUICardsExample = () => {
                            sx={{ height: 240, width: 240 }}
                            image={eachImage.url}
                            alt="Product Image"
-                           key={eachImage.name}
+                           key={eachImage.albumId}
                         />
                          <CardContent>
                             <Typography gutterBottom variant="h5" component="div">
-                                {eachImage.name}
+                                {eachImage.id}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                {eachImage.name}
+                                {eachImage.title}
                             </Typography>
                         </CardContent>
                        </Grid>
