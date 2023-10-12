@@ -87,16 +87,6 @@ const MaterialUICardsExample = () => {
       catch(err){
         console.log(err)
       }
-
-      
-        /* axios.get("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
-        
-        .then((res) => 
-          {
-            debugger;
-            (res)=>setImageSet(res.data.results)
-          })
-        .catch((err) => console.log(err)); */
     }, [])
 
  
