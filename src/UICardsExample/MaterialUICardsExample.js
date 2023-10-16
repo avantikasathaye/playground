@@ -1,32 +1,19 @@
 import React, {useState, useEffect} from 'react'
-
-import { Card } from '@mui/material'
-
+import { Button, Card } from '@mui/material'
+import Box from '@mui/material/Box';
 import CardMedia from '@mui/material/CardMedia';
-
 import CardContent from '@mui/material/CardContent';
-
 import Paper from "@mui/material/Paper";
-
 import Grid from "@mui/material/Grid";
-
 import images from './images.json';
-
 import Typography from '@mui/material/Typography';
-
 import ImageList from '@mui/material/ImageList';
-
 import ImageListItem from '@mui/material/ImageListItem';
-
 import ImageListItemBar from '@mui/material/ImageListItemBar';
-
 import axios from 'axios'
-
 import InfiniteScroll from "react-infinite-scroll-component";
-
-import Loader from './Loader';
-
- 
+import Loader from './Loader'; 
+import { Link } from 'react-router-dom';
 
 const classes = {
 
@@ -78,9 +65,9 @@ const MaterialUICardsExample = () => {
 
       try{
         const getData = async () => {
-          //const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
-          const response = await axios.get("https://jsonplaceholder.typicode.com/photos")
-          setImageSet(response.data)
+          const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0" , {credentials: "same-origin"})
+          //const response = await axios.get("https://jsonplaceholder.typicode.com/photos", {credentials: "same-origin"})
+          setImageSet(response.data.results)
         }
 
         getData();
@@ -97,11 +84,13 @@ const MaterialUICardsExample = () => {
         /* Data fetched from an API using axios */
 
            setTimeout(() => {
-            //axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100000&offset=${index}`) 
-            axios.get("https://jsonplaceholder.typicode.com/photos")
+            axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100000&offset=${index}`, 
+                    {credentials: "same-origin", 
+                      "Access-Control-Allow-Origin": "*"}) 
+            //axios.get("https://jsonplaceholder.typicode.com/photos")
             .then((res) => {
               debugger;
-                setImageSet((prevItems) => [...prevItems, ...res.data])
+                setImageSet((prevItems) => [...prevItems, ...res.results.data])
                 res.data.results.length > 0 ? setHasMore(true) : setHasMore(false)
             })
             .catch((err) => console.log(err));
@@ -118,6 +107,10 @@ const MaterialUICardsExample = () => {
 
     <div>
         <h2 style={{textAlign: 'center', margin: "50px"}}>Material UI Gallery</h2>
+        <Box textAlign={'center'}>
+          <Button component={Link} to="/materialcards" variant="contained" style={{alignContent: "center"}}>Cards Component</Button>
+        </Box>
+        
         <hr color='black' />
         <InfiniteScroll
             dataLength={imageSet.length}
@@ -134,7 +127,8 @@ const MaterialUICardsExample = () => {
                   ))} */}
 
                {/*   Using CardMedia  / CardContent  */}
-                    <Grid container spacing={3}>
+               <Box sx={{ flexGrow: 0 }}>
+                    <Grid container spacing={12}>
                     {imageSet && imageSet.map((eachImage, index) => (
                          <Grid item xs={6} sm={3}>
                          <CardMedia
@@ -155,6 +149,7 @@ const MaterialUICardsExample = () => {
                        </Grid>
                     ))}
                   </Grid>
+                  </Box>
                 </div>
             </div>
         </InfiniteScroll>
