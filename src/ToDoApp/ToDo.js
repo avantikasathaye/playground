@@ -56,6 +56,12 @@ export default function ToDo() {
   const [checked, setChecked] = useState([])
   let taskList = [];
 
+  const handleKeyPress = e => {
+    if(e.key === "Enter"){
+      appendTaskList();
+    }
+  }
+
   const appendTaskList = () => {
     setMyTaskList([...myTaskList, {"id": Math.floor(Math.random() * 100), "task": newTask, "status": "active"}])
     setNewTask("")
@@ -112,8 +118,8 @@ export default function ToDo() {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <TextField value={newTask} id="outlined-basic" label="Add task" 
-                    variant="outlined" onChange={(e) => {setNewTask(e.target.value)}}/>
-        <Button variant="contained" onClick={appendTaskList} style={{margin: "5px"}}>Add Task</Button>
+                    variant="outlined" onKeyDown={handleKeyPress} onChange={(e) => {setNewTask(e.target.value)}}/>
+        <Button variant="contained" /* onClick={appendTaskList} */  style={{margin: "5px"}}>Add Task</Button>
         {myTaskList.map((eachTask) => (
             <div>
                 <FormGroup style={{display: "inline-block"}}>
@@ -132,11 +138,17 @@ export default function ToDo() {
             
             {myTaskList.map((eachTask) => (
                 <>
-                    <FormGroup>
+                    {eachTask.status === "active" && 
+                      <li>
+                        {eachTask.task}
+                        </li>
+                    }
+                  
+                   {/*  <FormGroup>
                     { eachTask.status==="active" && 
                         <FormControlLabel control={<Checkbox />} label={eachTask.task} 
                                         onChange={() => editExistingTask(eachTask.id)}/>}
-                    </FormGroup>
+                    </FormGroup> */}
                 </>
             ))}
         </CustomTabPanel>
