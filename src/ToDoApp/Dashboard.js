@@ -20,14 +20,17 @@ const Dashboard = () => {
   return (
     <Box sx={{ flexGrow: 1 , marginTop: "25px"}}>
       <Grid container spacing={{ xs: 4, sm: 4, md: 8}} columns={{ xs: 4, sm: 8, md: 12 }} style={{ justifyContent: "center"}}>
-        
           <Grid item xs={2} sm={4} md={4} style={{margin: "10px"}}>
             <Item variant="contained" component={Link} to="/todos" style={{margin: "10px", fontWeight: "bold"}}>
             <FormatListBulletedIcon />
               To Do App</Item>
             <Item variant="contained" component={Link} to="/cardsexample" style={{ fontWeight: "bold"}}>
               <DashboardIcon />
-              Material UI Cards</Item>
+              Material UI Cards
+            </Item>
+            <Item variant="contained" component={Link} to="/countdowntimer" style={{ fontWeight: "bold"}}>
+              Countdown Timer
+            </Item>
           </Grid>
         
       </Grid>

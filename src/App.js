@@ -5,6 +5,7 @@ import ToDo from './ToDoApp/ToDo';
 import Dashboard from './ToDoApp/Dashboard';
 import { BrowserRouter as Router,Routes, Route, Link } from 'react-router-dom'; 
 import { Button } from '@mui/material';
+import Timer from './CountdownTimer/Timer';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/" Component={Dashboard}/>
         <Route path="/todos" Component={ToDo}/>
         <Route path="/cardsexample" Component={MaterialUICardsExample}/>
+        <Route path="/countdowntimer" Component={Timer}/>
       </Routes>
       {/* <ToDo /> */}
     </div>
