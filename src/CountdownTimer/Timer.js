@@ -13,7 +13,7 @@ const Timer = () => {
     
     const [count, setCount] = useState(diff);
     const [pause, setPause] = useState(false);
-    const [message, setMessage] = useState("Countdown Timer");
+    const [message, setMessage] = useState("");
 
     let intervalRef = useRef();
 
