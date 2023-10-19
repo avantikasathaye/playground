@@ -6,6 +6,7 @@ import Dashboard from './ToDoApp/Dashboard';
 import { BrowserRouter as Router,Routes, Route, Link } from 'react-router-dom'; 
 import { Button } from '@mui/material';
 import Timer from './CountdownTimer/Timer';
+import { ToastContainer, toast } from 'react-toastify';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
       </Routes>
       {/* <ToDo /> */}
     </div>
+   
     </Router>
   );
 }

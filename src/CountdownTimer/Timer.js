@@ -1,5 +1,8 @@
 import { Box, Button } from '@mui/material';
 import React, { useState, useRef, useEffect } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { COMPLETED, PAUSED, RESET, RESUMED, STARTED } from './constants';
 
 const Timer = () => {
     var t = new Date();
@@ -11,7 +14,7 @@ const Timer = () => {
     var time_in_minutes = t.getMinutes() - t.getMinutes();
     var formatted_T_minutes = String(time_in_minutes).padStart(2,'0');
     
-    const [count, setCount] = useState(diff);
+    const [count, setCount] = useState(10);
     const [pause, setPause] = useState(false);
     const [message, setMessage] = useState("");
 
@@ -20,25 +23,42 @@ const Timer = () => {
     const decrement = () => setCount((prev) => prev === 0 ? 0 : prev - 1);
 
     const handlePause = () => {
+      
       if (!pause) {
-        setMessage("Countdown Paused ...")
+        showToastMessage("Countdown-Paused ! ", PAUSED)
         clearInterval(intervalRef.current);
       } else {
-        setMessage("Countdown Resumed ...")
+        showToastMessage("Countdown-Resumed ...", RESUMED)
         intervalRef.current = setInterval(decrement, 1000);
       }
       setPause((prev) => !prev);
       };
 
     const handleStart = () => {
-        setMessage("Countdown Started ... ")
+        showToastMessage("Countdown-Started ... ", STARTED);
         intervalRef.current = setInterval(decrement, 1000);
     }
 
     const handleReset = () => {
-        setCount(diff);
+        setCount(10);
         clearInterval(intervalRef.current);
+        showToastMessage("Countdown-Reset ...", RESET);
     }
+
+    const showToastMessage = (toastMessage, type) => {
+      if(count === 0 && type == COMPLETED){
+        toastMessage = "Countdown Completed ! "
+        toast.success(toastMessage, {
+          position: toast.POSITION.TOP_RIGHT,
+          toastId: 'completed1',
+        });
+      }else{
+        toast.success(toastMessage, {
+          position: toast.POSITION.TOP_RIGHT
+      });
+      }
+
+  };
 
   return (
     <>
@@ -53,8 +73,9 @@ const Timer = () => {
       <Button style={{margin: "10px"}} variant="contained" onClick={handleStart} disabled={count < 10}>Start</Button>
       <Button style={{margin: "10px"}} variant="contained" onClick={handleReset}>Reset</Button>
     </Box>
-
-    <p className='centerAlign'>{count === 0 ? "Countdown Completed!" : message}</p>
+    
+    {count === 0 ? showToastMessage("Completed", COMPLETED) : null}
+    <ToastContainer />
     </>
   )
 }
