@@ -35,9 +35,18 @@ const Timer = () => {
     const [value, setValue] = useState(dayjs('2022-04-17T15:30'));
     
     const [minCount, setMinCount] = useState(value.$m);
+    const [timerSetFor, setTimerSetFor] = useState(0);
+    const [minsOver, setMinsOver] = useState(false);
 
     var intervalRef = useRef();
     var minutesIntervalRef = useRef();
+
+    useEffect(()=>{
+      if(minCount === 0) {
+       setMinsOver(true)
+       handleReset();
+      }
+     },[minCount])
 
     const decrement = () => {
       setCount((prev) => prev === 0 ? 60 : prev - 1);
@@ -52,9 +61,11 @@ const Timer = () => {
       if (!pause) {
         showToastMessage("Countdown-Paused ! ", PAUSED)
         clearInterval(intervalRef.current);
+        clearInterval(minutesIntervalRef.current);
       } else {
         showToastMessage("Countdown-Resumed ...", RESUMED)
         intervalRef.current = setInterval(decrement, 1000);
+        minutesIntervalRef.current = setInterval(decrement, 60000);
       }
       setPause((prev) => !prev);
       };
@@ -83,14 +94,14 @@ const Timer = () => {
     }
 
     const handleReset = () => {
-        setCount(10);
+      setMinsOver(false);
+        setCount(60);
         clearInterval(intervalRef.current);
         //showToastMessage("Countdown-Reset ...", RESET);
         return(<Alert severity='info'>AlertReset</Alert>)
     }
 
     const showToastMessage = (toastMessage, type) => {
-      debugger;
       if(count === 0 && type == COMPLETED){
         /* toastMessage = "Countdown Completed !"
         toast.success(toastMessage, {
@@ -99,11 +110,26 @@ const Timer = () => {
         }); */
         return (<Alert severity="success">CountDown Completed</Alert>)
       }else if(type == STARTED){
-        return (<Alert severity="success">{toastMessage}</Alert>)
+        return (<Alert severity="info">{toastMessage}</Alert>)
       }else if(type == RESET){
-        return (<Alert severity="success">{toastMessage}</Alert>)
+        return (<Alert severity="info">{toastMessage}</Alert>)
       }
   };
+
+  const timerValue = (newValue) => {
+      // Get the difference: 
+      /* var currentTime = new Date();
+      var currentTimeInMinutes = currentTime.getMinutes();
+      var difference = newValue.$m - currentTimeInMinutes;
+      setTimerSetFor(difference);
+      setMinCount(difference); */
+
+
+      var currentTime = new Date().getTime();
+      debugger;
+      console.log(newValue)
+  
+  }
 
   return (
     <>
@@ -113,29 +139,27 @@ const Timer = () => {
     <div className="centerAlign">
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
-        
         <TimePicker
           label="Controlled picker"
           value={value}
-          onChange={(newValue) => {
-                setValue(newValue)
-                setMinCount(newValue.$m)
-                }}
+          disablePast={true}
+          onChange={(newValue) => {timerValue(newValue)}}
         />
       </DemoContainer>
     </LocalizationProvider>
     </div>
     <Box className="centerAlign">
-      <div> {minCount} : {String(count).padStart(2, '0')}</div>
+      <div> {String(minCount).padStart(2, '0')} : {minsOver ? String(0).padStart(2, '0') : String(count).padStart(2, '0')}</div>
+      
     </Box>
+    <p className='centerAlign'>The countdown timer has been set for {timerSetFor} minute(s)</p>
     <Box  className="centerAlign">
       <Button style={{margin: "10px"}} variant="contained" onClick={handlePause} disabled={!togglePause}>{pause ? "Resume" : "Pause"}</Button>
-      <Button style={{margin: "10px"}} variant="contained" onClick={handleStart} disabled={count < 10}>Start</Button>
+      <Button style={{margin: "10px"}} variant="contained" onClick={handleStart} disabled={count < 60}>Start</Button>
       <Button style={{margin: "10px"}} variant="contained" onClick={handleReset}>Reset</Button>
     </Box>
     
     {count === 0 ? showToastMessage("Completed", COMPLETED) : null}
-    
     <ToastContainer />
     </>
   )
