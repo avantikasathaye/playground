@@ -32,7 +32,8 @@ const Timer = () => {
     const [pause, setPause] = useState(false);
     const [message, setMessage] = useState("");
     const [togglePause, setTogglePause] = useState(false)
-    const [value, setValue] = useState(dayjs('2022-04-17T15:30'));
+    //const [value, setValue] = useState(dayjs('2022-04-17T15:30'));
+    const [value, setValue] = useState(dayjs(new Date()));
     
     const [minCount, setMinCount] = useState(value.$m);
     const [timerSetFor, setTimerSetFor] = useState(0);
@@ -45,11 +46,20 @@ const Timer = () => {
       if(minCount === 0) {
        setMinsOver(true)
        handleReset();
+       showToastMessage("Completed finished!", COMPLETED);
       }
      },[minCount])
 
     const decrement = () => {
-      setCount((prev) => prev === 0 ? 60 : prev - 1);
+      setCount((prev) => prev === 0 ? 60 : prev -1 );
+      /* setCount((prev => {
+        if(prev === 0){
+          setCount(60)
+        }else{
+          setCount(prev -1)
+          //setInterval(minutesIntervalRef, 60002);
+        }
+      })) */
     }
 
     const decrementMins = () => {
@@ -65,10 +75,10 @@ const Timer = () => {
       } else {
         showToastMessage("Countdown-Resumed ...", RESUMED)
         intervalRef.current = setInterval(decrement, 1000);
-        minutesIntervalRef.current = setInterval(decrement, 60000);
+        minutesIntervalRef.current = setInterval(decrementMins, count * 1000); // need to reset this to 60000 , after the current min decrements!
       }
       setPause((prev) => !prev);
-      };
+    };
 
       const [open, setOpen] = useState(false);
 
@@ -89,20 +99,22 @@ const Timer = () => {
         setOpen(true);
         showToastMessage("Countdown-Started ... ", STARTED);
         intervalRef.current = setInterval(decrement, 1000);
-        minutesIntervalRef.current = setInterval(decrementMins, 60000);
+        minutesIntervalRef.current = setInterval(decrementMins, 60002);
         setTogglePause(true);
     }
 
     const handleReset = () => {
-      setMinsOver(false);
+        setMinsOver(false);
         setCount(60);
+        setMinCount(String(0).padStart(2, '0'));
         clearInterval(intervalRef.current);
+        clearInterval(minutesIntervalRef.current);
         //showToastMessage("Countdown-Reset ...", RESET);
         return(<Alert severity='info'>AlertReset</Alert>)
     }
 
     const showToastMessage = (toastMessage, type) => {
-      if(count === 0 && type == COMPLETED){
+      if(minCount === 0 && type == COMPLETED){
         /* toastMessage = "Countdown Completed !"
         toast.success(toastMessage, {
           position: toast.POSITION.TOP_RIGHT,
@@ -118,14 +130,13 @@ const Timer = () => {
 
   const timerValue = (newValue) => {
       // Get the difference: 
-      var currentTime = new Date();
-      var currentTimeInMinutes = currentTime.getMinutes();
-      var difference = newValue.$m - currentTimeInMinutes;
-      setTimerSetFor(difference);
-      setMinCount(difference);
-/*    var currentTime = new Date().getTime();
-      debugger;
-      console.log(newValue) */
+      let currentTime = new Date();
+      //let currentTimeInMinutes = currentTime.getMinutes();
+      //let difference = newValue.$m - currentTimeInMinutes;
+      let diff1 = newValue.$d.getTime() - currentTime.getTime();
+      let seconds = Math.floor(diff1 / 1000);
+      let minutes = Math.floor(seconds / 60);
+      setMinCount(minutes);
   }
 
   return (
@@ -146,10 +157,10 @@ const Timer = () => {
     </LocalizationProvider>
     </div>
     <Box className="centerAlign">
-      <div> {String(minCount).padStart(2, '0')} : {minsOver ? String(0).padStart(2, '0') : String(count).padStart(2, '0')}</div>
+      <div> {String(Math.abs(minCount)).padStart(2, '0')} : {minsOver ? String(0).padStart(2, '0') : String(count).padStart(2, '0')}</div>
       
     </Box>
-    <p className='centerAlign'>The countdown timer has been set for {timerSetFor} minute(s)</p>
+    <p className='centerAlign'>The countdown timer has been set for {minCount} minute(s)</p>
     <Box  className="centerAlign">
       <Button style={{margin: "10px"}} variant="contained" onClick={handlePause} disabled={!togglePause}>{pause ? "Resume" : "Pause"}</Button>
       <Button style={{margin: "10px"}} variant="contained" onClick={handleStart} disabled={count < 60}>Start</Button>
