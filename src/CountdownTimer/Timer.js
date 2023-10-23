@@ -118,17 +118,14 @@ const Timer = () => {
 
   const timerValue = (newValue) => {
       // Get the difference: 
-      /* var currentTime = new Date();
+      var currentTime = new Date();
       var currentTimeInMinutes = currentTime.getMinutes();
       var difference = newValue.$m - currentTimeInMinutes;
       setTimerSetFor(difference);
-      setMinCount(difference); */
-
-
-      var currentTime = new Date().getTime();
+      setMinCount(difference);
+/*    var currentTime = new Date().getTime();
       debugger;
-      console.log(newValue)
-  
+      console.log(newValue) */
   }
 
   return (
