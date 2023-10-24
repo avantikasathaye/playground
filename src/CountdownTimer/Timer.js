@@ -32,7 +32,6 @@ const Timer = () => {
     const [pause, setPause] = useState(false);
     const [message, setMessage] = useState("");
     const [togglePause, setTogglePause] = useState(false)
-    //const [value, setValue] = useState(dayjs('2022-04-17T15:30'));
     const [value, setValue] = useState(dayjs(new Date()));
     
     const [minCount, setMinCount] = useState(value.$m);
@@ -52,14 +51,6 @@ const Timer = () => {
 
     const decrement = () => {
       setCount((prev) => prev === 0 ? 60 : prev -1 );
-      /* setCount((prev => {
-        if(prev === 0){
-          setCount(60)
-        }else{
-          setCount(prev -1)
-          //setInterval(minutesIntervalRef, 60002);
-        }
-      })) */
     }
 
     const decrementMins = () => {
@@ -67,7 +58,6 @@ const Timer = () => {
     }
 
     const handlePause = () => {
-      
       if (!pause) {
         showToastMessage("Countdown-Paused ! ", PAUSED)
         clearInterval(intervalRef.current);
@@ -75,7 +65,8 @@ const Timer = () => {
       } else {
         showToastMessage("Countdown-Resumed ...", RESUMED)
         intervalRef.current = setInterval(decrement, 1000);
-        minutesIntervalRef.current = setInterval(decrementMins, count * 1000); // need to reset this to 60000 , after the current min decrements!
+        // TODO: need to reset this minutesIntervalRef ref to 60000 , after the current min decrements!
+        minutesIntervalRef.current = setInterval(decrementMins, count * 1000); 
       }
       setPause((prev) => !prev);
     };
@@ -115,11 +106,6 @@ const Timer = () => {
 
     const showToastMessage = (toastMessage, type) => {
       if(minCount === 0 && type == COMPLETED){
-        /* toastMessage = "Countdown Completed !"
-        toast.success(toastMessage, {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: 'completed1',
-        }); */
         return (<Alert severity="success">CountDown Completed</Alert>)
       }else if(type == STARTED){
         return (<Alert severity="info">{toastMessage}</Alert>)
@@ -129,10 +115,8 @@ const Timer = () => {
   };
 
   const timerValue = (newValue) => {
-      // Get the difference: 
+      // Get the difference: (using 'let' for block scope)
       let currentTime = new Date();
-      //let currentTimeInMinutes = currentTime.getMinutes();
-      //let difference = newValue.$m - currentTimeInMinutes;
       let diff1 = newValue.$d.getTime() - currentTime.getTime();
       let seconds = Math.floor(diff1 / 1000);
       let minutes = Math.floor(seconds / 60);
